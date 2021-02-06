@@ -1,0 +1,49 @@
+/*
+CSS composed by Souvik Das <souvik1982@gmail.com>
+February 3, 2021
+*/
+
+body
+{
+  font-family: Optima, sans-serif;
+  margin-right: 50px;
+  margin-left: 50px;
+}
+
+p
+{
+  margin-left: 5em;
+  margin-right: 5em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.login
+{
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  display: block;
+  background-color: linen;
+  border: 1px solid black;
+}
+
+table
+{
+  font-family: sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th
+{
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even)
+{
+  background-color: #dddddd;
+}
