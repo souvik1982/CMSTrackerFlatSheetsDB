@@ -9,7 +9,7 @@
 
 <div class="login">
 <h2> User Login </h2>
-<form action="login.php" method="post" enctype='multipart/form-data'>
+<form action="index.php" method="post" enctype='multipart/form-data'>
   <b>Username</b><br/>     <input type="text" name="username"> <br/><br/>
   <b>Password</b><br/>     <input type="password" name="userpass"> <br/><br/>
   <input type="submit" value="Sign In">

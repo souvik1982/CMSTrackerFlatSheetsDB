@@ -32,7 +32,7 @@
   <b>Confirm Password</b><br/>  <input type="password" name="confirmpass"> <br/><br/>
   <input type="submit" value="Sign Up">
 </form>
-Already have an account? <a href="login.php"> Login here.</a>
+Already have an account? <a href="index.php"> Login here.</a>
 </div>
 <br/>
 
@@ -80,7 +80,7 @@ Already have an account? <a href="login.php"> Login here.</a>
                            \"".$username."\",
                            \"".$userpass_hashed."\")";
       $output = mysqli_query($connection, $sqlQuery);
-      header("location: login.php");
+      header("location: index.php");
     }
   }
 ?>
