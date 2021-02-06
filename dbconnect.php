@@ -6,7 +6,7 @@ function openConnection()
   $dbuser = "souvik";
   $dbpass = "MuayThai23";
   $db = "practice";
-  if (!$conn = new mysqli($dbhost, $dbuser, $dbpass, $db)) echo "<b>ERROR</b>: Could not connect to the mySQL database. Please contact database management. </br> \n";
+  $conn = new mysqli($dbhost, $dbuser, $dbpass, $db);
   return $conn;
 }
 
