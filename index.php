@@ -32,7 +32,7 @@ Don't have an account? <a href="signup.php">Sign up now.</a><br/>
     if ($allOkay)
     {
       include("dbconnect.php");
-      if ($connection = openConnection();)
+      if ($connection = openConnection())
       {
         $sqlQuery = "SELECT * FROM users WHERE username='".$username."'";
         $map_output = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery));
