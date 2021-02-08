@@ -36,20 +36,24 @@ Don't have an account? <a href="signup.php">Sign up now.</a><br/>
       $sqlQuery = "SELECT * FROM users WHERE username='".$username."'";
       $map_output = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery));
 
-      if (password_verify($userpass, $map_output["userpass"]))
+      if ($map_output["username"] != "")
       {
-        session_start();
-        $_SESSION["loggedin"]    = true;
-        $_SESSION["username"]    = $username;
-        $_SESSION["userId"]      = $map_output["id"];
-        $_SESSION["firstname"]   = $map_output["firstname"];
-        $_SESSION["lastname"]    = $map_output["lastname"];
-        $_SESSION["affiliation"] = $map_output["affiliation"];
-        $_SESSION["privilege"]   = $map_output["privilege"];
+        if (password_verify($userpass, $map_output["userpass"]))
+        {
+          session_start();
+          $_SESSION["loggedin"]    = true;
+          $_SESSION["username"]    = $username;
+          $_SESSION["userId"]      = $map_output["id"];
+          $_SESSION["firstname"]   = $map_output["firstname"];
+          $_SESSION["lastname"]    = $map_output["lastname"];
+          $_SESSION["affiliation"] = $map_output["affiliation"];
+          $_SESSION["privilege"]   = $map_output["privilege"];
 
-        header("location: main.php");
+          header("location: main.php");
+        }
+        else echo "<b><center>The password you entered is not valid.</center></b><br/> \n";
       }
-      else echo "<b><center>The password you entered is not valid.</center></b><br/> \n";
+      else echo "<b><center>The username you entered has not been registered.</center></b><br/> \n";
     }
   }
 

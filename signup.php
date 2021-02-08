@@ -67,20 +67,25 @@ Already have an account? <a href="index.php"> Login here.</a>
 
     if ($allOkay)
     {
-      $userpass_hashed = password_hash($userpass, PASSWORD_DEFAULT);
-
       include("dbconnect.php");
       $connection = openConnection();
-      $sqlQuery = "INSERT INTO users (firstname, lastname, affiliation, privilege, email, username, userpass)
-                   VALUES (\"".$firstname."\",
-                           \"".$lastname."\",
-                           \"".$affiliation."\",
-                           \"".$privilege."\",
-                           \"".$email."\",
-                           \"".$username."\",
-                           \"".$userpass_hashed."\")";
+      $sqlQuery = "SELECT username FROM users WHERE username='".$username."'";
       $output = mysqli_query($connection, $sqlQuery);
-      header("location: index.php");
+      if (mysqli_num_rows($output) == 0)
+      {
+        $userpass_hashed = password_hash($userpass, PASSWORD_DEFAULT);
+        $sqlQuery = "INSERT INTO users (firstname, lastname, affiliation, privilege, email, username, userpass)
+                     VALUES (\"".$firstname."\",
+                             \"".$lastname."\",
+                             \"".$affiliation."\",
+                             \"".$privilege."\",
+                             \"".$email."\",
+                             \"".$username."\",
+                             \"".$userpass_hashed."\")";
+        mysqli_query($connection, $sqlQuery);
+        header("location: index.php");
+      }
+      else echo "<b><center>The username is taken. Please try something else.</center></b><br/> \n";
     }
   }
 ?>
