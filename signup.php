@@ -82,8 +82,8 @@ Already have an account? <a href="index.php"> Login here.</a>
                              \"".$email."\",
                              \"".$username."\",
                              \"".$userpass_hashed."\")";
-        mysqli_query($connection, $sqlQuery);
-        header("location: index.php");
+        if (mysqli_query($connection, $sqlQuery)) header("location: index.php");
+        else echo "<center><b>ERROR</b>: There has been an error communicating with the mySQL database.</center><br/> \n";
       }
       else echo "<b><center>The username is taken. Please try something else.</center></b><br/> \n";
     }

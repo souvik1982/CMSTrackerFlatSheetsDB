@@ -2,10 +2,10 @@
 
 function openConnection()
 {
-  $dbhost = "localhost";
-  $dbuser = "souvik";
-  $dbpass = "MuayThai23";
-  $db = "practice";
+  $dbhost = "avogadro.physics.purdue.edu";
+  $dbuser = "cmstrackeruser";
+  $dbpass = "DB for the CMS tracker.";
+  $db = "CMSTrackerFlatSheetsDB";
   $conn = new mysqli($dbhost, $dbuser, $dbpass, $db);
   return $conn;
 }
