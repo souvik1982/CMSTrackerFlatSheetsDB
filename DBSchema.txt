@@ -1,0 +1,24 @@
+CREATE TABLE users
+(
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  userpass VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  firstname VARCHAR(100) NOT NULL,
+  lastname VARCHAR(50) NOT NULL,
+  affiliation VARCHAR(50),
+  email VARCHAR(50) NOT NULL,
+  privilege VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE sheets
+(
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  sheetstring VARCHAR(50) NOT NULL,
+  folder VARCHAR(50),
+  userId INT,
+  created_at DATETIME,
+  location VARCHAR(50),
+  locationChangerId INT,
+  locationChangedTime DATETIME
+);
