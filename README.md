@@ -12,5 +12,9 @@ Purdue University
 A database application for the CMS Experiment's Phase II Upgrades. It is built to keep track of carbon-fiber flat sheets being manufactured for the Tracker sub-detector at multiple institutions. It is mostly PHP-based and talks to a mySQL database in the backend. The code is meant to be simple, pretty, easily maintainable over 5 years, with no external dependencies.
 </p>
 
+<p>
+The file containing login information for the database, dbconnect.php, is not included in this repository and should not be in the future.
+</p>
+
 </body>
 </html>
