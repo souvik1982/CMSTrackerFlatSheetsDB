@@ -93,23 +93,39 @@
         if (move_uploaded_file($_FILES["PDFToUpload"]["tmp_name"][$i_PDF], $storageFilename_PDF) &&
             move_uploaded_file($_FILES["CSVToUpload"]["tmp_name"][$i_CSV], $storageFilename_CSV))
         {
-          $userId = $_SESSION["userId"];
-          $sqlQuery = "INSERT INTO sheets (sheetstring, folder, userId)
-                       VALUES ('".$sheetstring."',
-                               '".$storageDirectory."','".$userId."')";
-          $output = mysqli_query($connection, $sqlQuery);
-          echo "<b>LOG</b>: Flat sheet ".$sheetstring." PDF and CSV uploaded. Database entry created.<br/> \n";
+
+          // Parse CSV file to extract thickness
+          echo $storageFilename_CSV;
+          if ($handle_CSV = fopen($storageFilename_CSV, "r"))
+          {
+            $thickness = 999;
+            while ($line = fgetcsv($handle_CSV))
+            {
+              if ($line[0] == "Mean_thickness") break;
+            }
+            if ($line[0] == "Mean_thickness") $thickness = floatval($line[1]*1000);
+            echo "Thickness = ".$thickness." <br/>";
+
+            $userId = $_SESSION["userId"];
+            $dateTime = date("Y-m-d H:i:s");
+            $location = $_SESSION["affiliation"];
+            $sqlQuery = "INSERT INTO sheets (sheetstring, folder, created_at, userId, thickness, location)
+                         VALUES ('".$sheetstring."',
+                                 '".$storageDirectory."',
+                                 '".$dateTime."',
+                                 '".$userId."',
+                                 '".$thickness."',
+                                 '".$location."')";
+            echo "SQL command = ".$sqlQuery." <br/>";
+            $output = mysqli_query($connection, $sqlQuery);
+            echo "<b>LOG</b>: Flat sheet ".$sheetstring." PDF and CSV uploaded. Database entry created.<br/> \n";
+          }
+          else echo "<b>WARNING</b>: Could not open CSV file to extract thickness.</br/> \n";
         }
-        else
-        {
-          echo "<b>ERROR</b>: Could not store PDF and CSV files in ".$storageDirectory.". Please contact database management.<br/> \n";
-        }
+        else echo "<b>ERROR</b>: Could not store PDF and CSV files in ".$storageDirectory.". Please contact database management.<br/> \n";
       }
     } // For loop over the CSV files
-    if ($foundCSV == false)
-    {
-      echo "<b>WARNING</b>: Could not find CSV file for ".$sheetstring.". Neither the PDF nor the CSV file will be uploaded. The database will not be populated with this sheet. Please return with the CSV file.<br/> \n";
-    }
+    if ($foundCSV == false) echo "<b>WARNING</b>: Could not find CSV file for ".$sheetstring.". Neither the PDF nor the CSV file will be uploaded. The database will not be populated with this sheet. Please return with the CSV file.<br/> \n";
   } // For loop over the PDF files
 
 ?>
