@@ -49,9 +49,10 @@
       echo "  <th> Datasheets Entered by </th> \n";
       echo "  <th> PDF Datasheet </th> \n";
       echo "  <th> CSV Datasheet </th> \n";
-      echo "  <th> Thickness </th> \n";
+      echo "  <th> Thickness (μm) </th> \n";
       echo "  <th> Location </th> \n";
       echo "  <th> Location Modified by </th> \n";
+      echo "  <th> Location Modified on </th> \n";
       echo " </tr> \n";
 
       include("dbconnect.php");
@@ -63,20 +64,29 @@
       {
         $sheetstring_this = $map_output["sheetstring"];
         $file = $map_output["folder"].$sheetstring_this;
+        $thickness = $map_output["thickness"];
+        $location = $map_output["location"];
+        $movingTime = $map_output["movingTime"];
 
         $userId = $map_output["userId"];
         $sqlQuery_user = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$userId;
         $map_output_user = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_user));
         $userInformation = $map_output_user["firstname"]." ".$map_output_user["lastname"].", ".$map_output_user["affiliation"];
 
+        $moverId = $map_output["moverId"];
+        $sqlQuery_mover = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$moverId;
+        $map_output_mover = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_mover));
+        $moverInformation = $map_output_mover["firstname"]." ".$map_output_mover["lastname"].", ".$map_output_mover["affiliation"];
+
         echo "<tr> \n";
         echo " <td> ".$sheetstring_this." </td> \n";
         echo " <td> ".$userInformation." </td> \n";
         echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring_this.".PDF</a> </td> \n";
         echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring_this.".CSV</a> </td> \n";
-        echo " <td> NA </td> \n";
-        echo " <td> NA </td> \n";
-        echo " <td> NA </td> \n";
+        echo " <td> ".$thickness." </td> \n";
+        echo " <td> ".$location." </td> \n";
+        echo " <td> ".$moverInformation." </td> \n";
+        echo " <td> ".$movingTime." </td> \n";
         echo "</tr> \n";
       }
 
