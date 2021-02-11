@@ -17,8 +17,9 @@ CREATE TABLE sheets
   sheetstring VARCHAR(50) NOT NULL,
   folder VARCHAR(50),
   userId INT,
+  thickness INT,
   created_at DATETIME,
   location VARCHAR(50),
-  locationChangerId INT,
-  locationChangedTime DATETIME
+  moverId INT,
+  movingTime DATETIME
 );
