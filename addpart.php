@@ -95,16 +95,15 @@
         {
 
           // Parse CSV file to extract thickness
-          echo $storageFilename_CSV;
           if ($handle_CSV = fopen($storageFilename_CSV, "r"))
           {
             $thickness = 999;
             while ($line = fgetcsv($handle_CSV))
-            {
-              if ($line[0] == "Mean_thickness") break;
-            }
-            if ($line[0] == "Mean_thickness") $thickness = floatval($line[1]*1000);
-            echo "Thickness = ".$thickness." <br/>";
+              if ($line[0] == "Mean_thickness")
+              {
+                $thickness = floatval($line[1]*1000);
+                break;
+              }
 
             $userId = $_SESSION["userId"];
             $dateTime = date("Y-m-d H:i:s");
@@ -116,7 +115,6 @@
                                  '".$userId."',
                                  '".$thickness."',
                                  '".$location."')";
-            echo "SQL command = ".$sqlQuery." <br/>";
             $output = mysqli_query($connection, $sqlQuery);
             echo "<b>LOG</b>: Flat sheet ".$sheetstring." PDF and CSV uploaded. Database entry created.<br/> \n";
           }
