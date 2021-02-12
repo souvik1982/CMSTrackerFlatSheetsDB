@@ -15,9 +15,10 @@ CREATE TABLE sheets
 (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   sheetstring VARCHAR(50) NOT NULL,
-  folder VARCHAR(50),
+  folder VARCHAR(100),
   userId INT,
-  thickness INT,
+  thickness_mean INT,
+  thickness_stddev, INT,
   created_at DATETIME,
   location VARCHAR(50),
   moverId INT,
