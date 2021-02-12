@@ -30,7 +30,7 @@
   <b>Username</b><br/>          <input type="text" name="username"> <br/><br/>
   <b>Password</b><br/>          <input type="password" name="userpass"> <br/><br/>
   <b>Confirm Password</b><br/>  <input type="password" name="confirmpass"> <br/><br/>
-  <input type="submit" value="Sign Up">
+  <input type="submit" value="Sign Up"/>
 </form>
 Already have an account? <a href="index.php"> Login here.</a>
 </div>
