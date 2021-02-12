@@ -75,8 +75,13 @@
 
         $moverId = $map_output["moverId"];
         $sqlQuery_mover = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$moverId;
-        $map_output_mover = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_mover));
-        $moverInformation = $map_output_mover["firstname"]." ".$map_output_mover["lastname"].", ".$map_output_mover["affiliation"];
+        $result_mover = mysqli_query($connection, $sqlQuery_mover);
+        $moverInformation = "";
+        if ($result_mover)
+        {
+          $map_output_mover = mysqli_fetch_assoc($result_mover);
+          $moverInformation = $map_output_mover["firstname"]." ".$map_output_mover["lastname"].", ".$map_output_mover["affiliation"];
+        }
 
         echo "<tr> \n";
         echo " <td> ".$sheetstring_this." </td> \n";
