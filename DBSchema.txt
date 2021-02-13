@@ -18,7 +18,7 @@ CREATE TABLE sheets
   folder VARCHAR(100),
   userId INT,
   thickness_mean INT,
-  thickness_stddev, INT,
+  thickness_stddev INT,
   created_at DATETIME,
   location VARCHAR(50),
   moverId INT,
