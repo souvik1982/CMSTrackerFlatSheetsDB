@@ -107,19 +107,28 @@
                 if ($line[0] == "Thickness_StdDev") {$thickness_stddev = floatval($line[1]*1000); break;}
               }
 
-              $userId = $_SESSION["userId"];
-              $dateTime = date("Y-m-d H:i:s");
-              $location = $_SESSION["affiliation"];
-              $sqlQuery = "INSERT INTO sheets (sheetstring, folder, created_at, userId, thickness_mean, thickness_stddev, location)
-                           VALUES ('".$sheetstring."',
-                                   '".$storageDirectory."',
-                                   '".$dateTime."',
-                                   '".$userId."',
-                                   '".$thickness_mean."',
-                                   '".$thickness_stddev."',
-                                   '".$location."')";
-              $output = mysqli_query($connection, $sqlQuery);
-              echo "<b>LOG</b>: Flat sheet ".$sheetstring." PDF and CSV uploaded. Database entry created.<br/> \n";
+              if ($thickness_mean != 999 && $thickness_stddev != 999)
+              {
+                $userId = $_SESSION["userId"];
+                $dateTime = date("Y-m-d H:i:s");
+                $location = $_SESSION["affiliation"];
+                $sqlQuery = "INSERT INTO sheets (sheetstring, folder, created_at, userId, thickness_mean, thickness_stddev, location)
+                             VALUES ('".$sheetstring."',
+                                     '".$storageDirectory."',
+                                     '".$dateTime."',
+                                     '".$userId."',
+                                     '".$thickness_mean."',
+                                     '".$thickness_stddev."',
+                                     '".$location."')";
+                $output = mysqli_query($connection, $sqlQuery);
+                echo "<b>LOG</b>: Flat sheet ".$sheetstring." PDF and CSV uploaded. Database entry created.<br/> \n";
+              }
+              else
+              {
+                system("rm -rf ".$storageDirectory);
+                echo "<b>ERROR</b>: Mean and standard deviation of sheet thickness of ".$sheetstring." could not be read from its CSV. Will not add this sheet to the database. <br/> \n";
+                echo "Please ensure there is a 'Thickness_Mean' field followed by a 'Thickness_StdDev' field in the CSV. <br/> \n";
+              }
             }
             else echo "<b>WARNING</b>: Could not open CSV file to extract thickness.</br/> \n";
           }
