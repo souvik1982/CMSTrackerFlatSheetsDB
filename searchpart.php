@@ -53,10 +53,10 @@
   {
     if ($_SESSION["searchstring"] != "")
     {
-      $searchstring = $_SESSION["searchstring"];             unset($_SESSION["searchstring"]);
-      $searchLocation = $_SESSION["location"];               unset($_SESSION["location"]);
-      $thicknessMean_lo = $_SESSION["thicknessMean_lo"];     unset($_SESSION["thicknessMean_lo"]);
-      $thicknessMean_hi = $_SESSION["thicknessMean_hi"];     unset($_SESSION["thicknessMean_hi"]);
+      $searchstring       = $_SESSION["searchstring"];       unset($_SESSION["searchstring"]);
+      $searchLocation     = $_SESSION["location"];           unset($_SESSION["location"]);
+      $thicknessMean_lo   = $_SESSION["thicknessMean_lo"];   unset($_SESSION["thicknessMean_lo"]);
+      $thicknessMean_hi   = $_SESSION["thicknessMean_hi"];   unset($_SESSION["thicknessMean_hi"]);
       $thicknessStdDev_lo = $_SESSION["thicknessStdDev_lo"]; unset($_SESSION["thicknessStdDev_lo"]);
       $thicknessStdDev_hi = $_SESSION["thicknessStdDev_hi"]; unset($_SESSION["thicknessStdDev_hi"]);
       $goodArguments = true;
@@ -66,10 +66,10 @@
   {
     if ($_POST["searchstring"] != "")
     {
-      $searchstring = $_POST["searchstring"];
-      $searchLocation = $_POST["location"];
-      $thicknessMean_lo = $_POST["thicknessMean_lo"];
-      $thicknessMean_hi = $_POST["thicknessMean_hi"];
+      $searchstring       = $_POST["searchstring"];
+      $searchLocation     = $_POST["location"];
+      $thicknessMean_lo   = $_POST["thicknessMean_lo"];
+      $thicknessMean_hi   = $_POST["thicknessMean_hi"];
       $thicknessStdDev_lo = $_POST["thicknessStdDev_lo"];
       $thicknessStdDev_hi = $_POST["thicknessStdDev_hi"];
       $goodArguments = true;
