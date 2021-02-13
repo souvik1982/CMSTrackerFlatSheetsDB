@@ -19,7 +19,7 @@
     echo "Your options today are: <br/> \n";
     echo "<ul> \n";
     if ($_SESSION["privilege"] == "Editor") echo "<li><a href='addpart.php'> <b>Add</b> flat sheets to the database </a></li> \n";
-    echo "<li><a href='searchpart.php'> <b>Search</b> for sheets in the database </a></li> \n";
+    echo "<li><a href='searchpart.php'> <b>Search</b> for and <b>change geographical location of</b> sheets in the database </a></li> \n";
     echo "<li><a href='users.php'> View <b>users</b> of the database </a></li> \n";
     echo "<li><a href='logout.php'> <b>Logout</b> </a></li> \n";
     echo "</ul> \n";
