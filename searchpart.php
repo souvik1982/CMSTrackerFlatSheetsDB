@@ -48,119 +48,126 @@
 ?>
 
 <?php
-  if (isset($_POST["searchstring"]) || isset($_SESSION["searchstring"]))
+  $goodArguments = false;
+  if (isset($_SESSION["searchstring"]))
   {
-    if ($_POST["searchstring"] != "" || $_SESSION["searchstring"] != "")
+    if ($_SESSION["searchstring"] != "")
     {
-      if ($_SESSION["searchstring"] != "")
-      {
-        $searchstring = $_SESSION["searchstring"];             unset($_SESSION["searchstring"]);
-        $searchLocation = $_SESSION["location"];               unset($_SESSION["location"]);
-        $thicknessMean_lo = $_SESSION["thicknessMean_lo"];     unset($_SESSION["thicknessMean_lo"]);
-        $thicknessMean_hi = $_SESSION["thicknessMean_hi"];     unset($_SESSION["thicknessMean_hi"]);
-        $thicknessStdDev_lo = $_SESSION["thicknessStdDev_lo"]; unset($_SESSION["thicknessStdDev_lo"]);
-        $thicknessStdDev_hi = $_SESSION["thicknessStdDev_hi"]; unset($_SESSION["thicknessStdDev_hi"]);
-      }
-      else
-      {
-        $searchstring = $_POST["searchstring"];
-        $searchLocation = $_POST["location"];
-        $thicknessMean_lo = $_POST["thicknessMean_lo"];
-        $thicknessMean_hi = $_POST["thicknessMean_hi"];
-        $thicknessStdDev_lo = $_POST["thicknessStdDev_lo"];
-        $thicknessStdDev_hi = $_POST["thicknessStdDev_hi"];
-      }
-      if ($searchLocation == "Any") $searchLocation = "%";
-
-      echo "<br/> \n";
-      echo "<p> \n";
-      echo "<h2> Matching Sheets </h2> \n";
-      echo "<table> \n";
-      echo " <tr> \n";
-      echo "  <th> Sheet String </th> \n";
-      echo "  <th> Datasheets Entered by </th> \n";
-      echo "  <th> PDF Datasheet </th> \n";
-      echo "  <th> CSV Datasheet </th> \n";
-      echo "  <th> Thickness (μm) </th> \n";
-      echo "  <th> Location </th> \n";
-      echo "  <th> Location Modified by </th> \n";
-      echo "  <th> Location Modified on </th> \n";
-      echo " </tr> \n";
-
-      include("dbconnect.php");
-      $connection = openConnection();
-      $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."' AND
-                                              location LIKE '".$searchLocation."' AND
-                                              thickness_mean > '".$thicknessMean_lo."' AND
-                                              thickness_mean < '".$thicknessMean_hi."' AND
-                                              thickness_stddev > '".$thicknessStdDev_lo."' AND
-                                              thickness_stddev < '".$thicknessStdDev_hi."'";
-      $queryResult = mysqli_query($connection, $sqlQuery);
-
-      while ($map_output = mysqli_fetch_assoc($queryResult))
-      {
-        $sheetstring = $map_output["sheetstring"];
-        $file = $map_output["folder"].$sheetstring;
-        $thickness = $map_output["thickness_mean"]." ± ".$map_output["thickness_stddev"];
-        $location = $map_output["location"];
-        $movingTime = $map_output["movingTime"];
-
-        $userId = $map_output["userId"];
-        $sqlQuery_user = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$userId;
-        $map_output_user = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_user));
-        $userInformation = $map_output_user["firstname"]." ".$map_output_user["lastname"].", ".$map_output_user["affiliation"];
-
-        $moverId = $map_output["moverId"];
-        $sqlQuery_mover = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$moverId;
-        $result_mover = mysqli_query($connection, $sqlQuery_mover);
-        $moverInformation = "";
-        if ($result_mover)
-        {
-          $map_output_mover = mysqli_fetch_assoc($result_mover);
-          $moverInformation = $map_output_mover["firstname"]." ".$map_output_mover["lastname"].", ".$map_output_mover["affiliation"];
-        }
-
-        echo "<tr> \n";
-        echo " <td> ".$sheetstring." </td> \n";
-        echo " <td> ".$userInformation." </td> \n";
-        echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
-        echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
-        echo " <td> ".$thickness." </td> \n";
-
-        // The location can be changed and needs a dropdown menu if it is to be edited
-        echo " <td > \n";
-        echo $location." \n";
-        echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
-        echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
-        echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
-        echo "   <option value='Purdue University'>Purdue University</option> \n";
-        echo "   <option value='Fermilab'>Fermilab</option> \n";
-        echo "   <option value='CERN'>CERN</option> \n";
-        echo "   <option value='ACP Composites'>ACP Composites</option> \n";
-        echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
-        echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
-        echo "  </select> \n";
-        echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
-        echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
-        echo "  <input type='hidden' name='thicknessMean_lo' value='".$thicknessMean_lo."'/>";
-        echo "  <input type='hidden' name='thicknessMean_hi' value='".$thicknessMean_hi."'/>";
-        echo "  <input type='hidden' name='thicknessStdDev_lo' value='".$thicknessStdDev_lo."'/>";
-        echo "  <input type='hidden' name='thicknessStdDev_hi' value='".$thicknessStdDev_hi."'/>";
-        echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
-        echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
-        echo "</form> \n";
-        echo "<button type='button' id='cancel_".$sheetstring."' style='display:none' onclick=hideMovingElements('".$sheetstring."')>Cancel</button> \n";
-        echo " </td> \n";
-
-        echo " <td> ".$moverInformation." </td> \n";
-        echo " <td> ".$movingTime." </td> \n";
-        echo "</tr> \n";
-      }
-
-      echo "</table> \n";
+      $searchstring = $_SESSION["searchstring"];             unset($_SESSION["searchstring"]);
+      $searchLocation = $_SESSION["location"];               unset($_SESSION["location"]);
+      $thicknessMean_lo = $_SESSION["thicknessMean_lo"];     unset($_SESSION["thicknessMean_lo"]);
+      $thicknessMean_hi = $_SESSION["thicknessMean_hi"];     unset($_SESSION["thicknessMean_hi"]);
+      $thicknessStdDev_lo = $_SESSION["thicknessStdDev_lo"]; unset($_SESSION["thicknessStdDev_lo"]);
+      $thicknessStdDev_hi = $_SESSION["thicknessStdDev_hi"]; unset($_SESSION["thicknessStdDev_hi"]);
+      $goodArguments = true;
     }
-    else echo "You must enter a search string. <br/> \n";
   }
+  else if (isset($_POST["searchstring"]))
+  {
+    if ($_POST["searchstring"] != "")
+    {
+      $searchstring = $_POST["searchstring"];
+      $searchLocation = $_POST["location"];
+      $thicknessMean_lo = $_POST["thicknessMean_lo"];
+      $thicknessMean_hi = $_POST["thicknessMean_hi"];
+      $thicknessStdDev_lo = $_POST["thicknessStdDev_lo"];
+      $thicknessStdDev_hi = $_POST["thicknessStdDev_hi"];
+      $goodArguments = true;
+    }
+  }
+
+  if ($goodArguments)
+  {
+    if ($searchLocation == "Any") $searchLocation = "%";
+
+    echo "<br/> \n";
+    echo "<p> \n";
+    echo "<h2> Matching Sheets </h2> \n";
+    echo "<table> \n";
+    echo " <tr> \n";
+    echo "  <th> Sheet String </th> \n";
+    echo "  <th> Datasheets Entered by </th> \n";
+    echo "  <th> PDF Datasheet </th> \n";
+    echo "  <th> CSV Datasheet </th> \n";
+    echo "  <th> Thickness (μm) </th> \n";
+    echo "  <th> Location </th> \n";
+    echo "  <th> Location Modified by </th> \n";
+    echo "  <th> Location Modified on </th> \n";
+    echo " </tr> \n";
+
+    include("dbconnect.php");
+    $connection = openConnection();
+    $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."' AND
+                                            location LIKE '".$searchLocation."' AND
+                                            thickness_mean > '".$thicknessMean_lo."' AND
+                                            thickness_mean < '".$thicknessMean_hi."' AND
+                                            thickness_stddev > '".$thicknessStdDev_lo."' AND
+                                            thickness_stddev < '".$thicknessStdDev_hi."'";
+    $queryResult = mysqli_query($connection, $sqlQuery);
+
+    while ($map_output = mysqli_fetch_assoc($queryResult))
+    {
+      $sheetstring = $map_output["sheetstring"];
+      $file = $map_output["folder"].$sheetstring;
+      $thickness = $map_output["thickness_mean"]." ± ".$map_output["thickness_stddev"];
+      $location = $map_output["location"];
+      $movingTime = $map_output["movingTime"];
+
+      $userId = $map_output["userId"];
+      $sqlQuery_user = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$userId;
+      $map_output_user = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_user));
+      $userInformation = $map_output_user["firstname"]." ".$map_output_user["lastname"].", ".$map_output_user["affiliation"];
+
+      $moverId = $map_output["moverId"];
+      $sqlQuery_mover = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$moverId;
+      $result_mover = mysqli_query($connection, $sqlQuery_mover);
+      $moverInformation = "";
+      if ($result_mover)
+      {
+        $map_output_mover = mysqli_fetch_assoc($result_mover);
+        $moverInformation = $map_output_mover["firstname"]." ".$map_output_mover["lastname"].", ".$map_output_mover["affiliation"];
+      }
+
+      echo "<tr> \n";
+      echo " <td> ".$sheetstring." </td> \n";
+      echo " <td> ".$userInformation." </td> \n";
+      echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
+      echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
+      echo " <td> ".$thickness." </td> \n";
+
+      // The location can be changed and needs a dropdown menu if it is to be edited
+      echo " <td > \n";
+      echo $location." \n";
+      echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
+      echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
+      echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
+      echo "   <option value='Purdue University'>Purdue University</option> \n";
+      echo "   <option value='Fermilab'>Fermilab</option> \n";
+      echo "   <option value='CERN'>CERN</option> \n";
+      echo "   <option value='ACP Composites'>ACP Composites</option> \n";
+      echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
+      echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
+      echo "  </select> \n";
+      echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
+      echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
+      echo "  <input type='hidden' name='thicknessMean_lo' value='".$thicknessMean_lo."'/>";
+      echo "  <input type='hidden' name='thicknessMean_hi' value='".$thicknessMean_hi."'/>";
+      echo "  <input type='hidden' name='thicknessStdDev_lo' value='".$thicknessStdDev_lo."'/>";
+      echo "  <input type='hidden' name='thicknessStdDev_hi' value='".$thicknessStdDev_hi."'/>";
+      echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
+      echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
+      echo "</form> \n";
+      echo "<button type='button' id='cancel_".$sheetstring."' style='display:none' onclick=hideMovingElements('".$sheetstring."')>Cancel</button> \n";
+      echo " </td> \n";
+
+      echo " <td> ".$moverInformation." </td> \n";
+      echo " <td> ".$movingTime." </td> \n";
+      echo "</tr> \n";
+    }
+
+    echo "</table> \n";
+  }
+  else echo "You must enter a search string. <br/> \n";
 ?>
 
 <br/><br/>
