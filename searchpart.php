@@ -5,6 +5,34 @@
 </head>
 <body>
 
+<script>
+  function showMovingElements(id)
+  {
+    var id_edit = "edit_" + id;
+    var id_dropDown = "dropDown_" + id;
+    var id_submit = "submit_" + id;
+    var id_cancel = "cancel_" + id;
+
+    document.getElementById(id_edit).style.display = 'none';
+    document.getElementById(id_dropDown).style.display = 'block';
+    document.getElementById(id_submit).style.display = 'block';
+    document.getElementById(id_cancel).style.display = 'block';
+  }
+
+  function hideMovingElements(id)
+  {
+    var id_edit = "edit_" + id;
+    var id_dropDown = "dropDown_" + id;
+    var id_submit = "submit_" + id;
+    var id_cancel = "cancel_" + id;
+
+    document.getElementById(id_edit).style.display = 'block';
+    document.getElementById(id_dropDown).style.display = 'none';
+    document.getElementById(id_submit).style.display = 'none';
+    document.getElementById(id_cancel).style.display = 'none';
+  }
+</script>
+
 <h1 align="center"> CMS Tracker Flat Sheets Database </h1>
 
 <?php
@@ -18,7 +46,7 @@
     echo "<br/> \n";
     echo "<p> \n";
     echo "<form action='searchpart.php' method='post' enctype='multipart/form-data'> \n";
-    echo " Search by <b>Sheet String</b>: <input type='text' name='sheetstring'/> <br/> \n";
+    echo " Search by <b>Sheet String</b>: <input type='text' name='searchstring'/> <br/> \n";
     echo "Wildcards allowed: \n";
     echo "<ul> \n";
     echo " <li> <b>%</b> Represents zero or more characters. For example, 'bl%' finds bl, black, blue, and blob. </li> \n";
@@ -34,11 +62,13 @@
 ?>
 
 <?php
-  if (isset($_POST["sheetstring"]))
+  if (isset($_POST["searchstring"]) || isset($_SESSION["searchstring"]))
   {
-    if ($_POST["sheetstring"] != "")
+    if ($_POST["searchstring"] != "" || $_SESSION["searchstring"] != "")
     {
-      $sheetstring = $_POST["sheetstring"];
+      $searchstring = "%";
+      if ($_SESSION["searchstring"] != "") {$searchstring = $_SESSION["searchstring"]; unset($_SESSION["searchstring"]);}
+      else $searchstring = $_POST["searchstring"];
 
       echo "<br/> \n";
       echo "<p> \n";
@@ -57,13 +87,13 @@
 
       include("dbconnect.php");
       $connection = openConnection();
-      $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$sheetstring."'";
+      $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."'";
       $queryResult = mysqli_query($connection, $sqlQuery);
 
       while ($map_output = mysqli_fetch_assoc($queryResult))
       {
-        $sheetstring_this = $map_output["sheetstring"];
-        $file = $map_output["folder"].$sheetstring_this;
+        $sheetstring = $map_output["sheetstring"];
+        $file = $map_output["folder"].$sheetstring;
         $thickness = $map_output["thickness_mean"]." ± ".$map_output["thickness_stddev"];
         $location = $map_output["location"];
         $movingTime = $map_output["movingTime"];
@@ -84,12 +114,32 @@
         }
 
         echo "<tr> \n";
-        echo " <td> ".$sheetstring_this." </td> \n";
+        echo " <td> ".$sheetstring." </td> \n";
         echo " <td> ".$userInformation." </td> \n";
-        echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring_this.".PDF</a> </td> \n";
-        echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring_this.".CSV</a> </td> \n";
+        echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
+        echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
         echo " <td> ".$thickness." </td> \n";
-        echo " <td> ".$location." </td> \n";
+
+        // The location can be changed and needs a dropdown menu if it is to be edited
+        echo " <td > \n";
+        echo $location." \n";
+        echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
+        echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
+        echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
+        echo "   <option value='Purdue University'>Purdue University</option> \n";
+        echo "   <option value='Fermilab'>Fermilab</option> \n";
+        echo "   <option value='CERN'>CERN</option> \n";
+        echo "   <option value='ACP Composites'>ACP Composites</option> \n";
+        echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
+        echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
+        echo "  </select> \n";
+        echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
+        echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
+        echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
+        echo "</form> \n";
+        echo "<button type='button' id='cancel_".$sheetstring."' style='display:none' onclick=hideMovingElements('".$sheetstring."')>Cancel</button> \n";
+        echo " </td> \n";
+
         echo " <td> ".$moverInformation." </td> \n";
         echo " <td> ".$movingTime." </td> \n";
         echo "</tr> \n";
@@ -97,7 +147,7 @@
 
       echo "</table> \n";
     }
-    else echo "You must enter a sheetstring. <br/> \n";
+    else echo "You must enter a search string. <br/> \n";
   }
 ?>
 
