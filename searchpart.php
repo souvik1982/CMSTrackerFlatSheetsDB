@@ -86,6 +86,7 @@
     echo "<h2> Matching Sheets </h2> \n";
     echo "<table> \n";
     echo " <tr> \n";
+    echo "  <th> # </th> \n";
     echo "  <th> Sheet String </th> \n";
     echo "  <th> Datasheets Entered by </th> \n";
     echo "  <th> PDF Datasheet </th> \n";
@@ -106,8 +107,11 @@
                                             thickness_stddev < '".$thicknessStdDev_hi."'";
     $queryResult = mysqli_query($connection, $sqlQuery);
 
+    $itemNumber = 0;
     while ($map_output = mysqli_fetch_assoc($queryResult))
     {
+      ++$itemNumber;
+
       $sheetstring = $map_output["sheetstring"];
       $file = $map_output["folder"].$sheetstring;
       $thickness = $map_output["thickness_mean"]." ± ".$map_output["thickness_stddev"];
@@ -130,6 +134,7 @@
       }
 
       echo "<tr> \n";
+      echo " <td> ".$itemNumber." </td> \n";
       echo " <td> ".$sheetstring." </td> \n";
       echo " <td> ".$userInformation." </td> \n";
       echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
