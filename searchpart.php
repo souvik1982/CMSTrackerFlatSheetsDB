@@ -74,6 +74,7 @@
       $thicknessStdDev_hi = $_POST["thicknessStdDev_hi"];
       $goodArguments = true;
     }
+    else echo "You must enter a search string. <br/> \n";
   }
 
   if ($goodArguments)
@@ -167,7 +168,7 @@
 
     echo "</table> \n";
   }
-  else echo "You must enter a search string. <br/> \n";
+
 ?>
 
 <br/><br/>
