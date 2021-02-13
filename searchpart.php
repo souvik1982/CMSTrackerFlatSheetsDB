@@ -20,7 +20,7 @@
     echo "<br/> \n";
     echo "<p> \n";
     echo "<form action='searchpart.php' method='post' enctype='multipart/form-data'> \n";
-    echo " Search by <b>Sheet String</b>: <input type='text' name='searchstring'/> <br/> \n";
+    echo " Search by <b>Sheet String</b>: <input type='text' name='searchstring' value='%'/> <br/> \n";
     echo "Wildcards allowed: \n";
     echo "<ul> \n";
     echo " <li> <b>%</b> Represents zero or more characters. For example, 'bl%' finds bl, black, blue, and blob. </li> \n";
@@ -29,6 +29,18 @@
     echo " <li> <b>^</b> Represents any character not in the brackets. For example, h[^oa]t finds hit, but not hot and hat. </li> \n";
     echo " <li> <b>-</b> Represents a range of characters. For example,	c[a-b]t finds cat and cbt. </li> \n";
     echo "</ul> \n";
+    echo " AND <b>Current Location</b>: \n";
+    echo " <select name='location'> \n";
+    echo "  <option value='Any'>Any</option> \n";
+    echo "  <option value='Purdue University'>Purdue University</option> \n";
+    echo "  <option value='Fermilab'>Fermilab</option> \n";
+    echo "  <option value='CERN'>CERN</option> \n";
+    echo "  <option value='ACP Composites'>ACP Composites</option> \n";
+    echo "  <option value='INFN Perugia'>INFN Perugia</option> \n";
+    echo "  <option value='INFN Pisa'>INFN Pisa</option> \n";
+    echo " </select> <br/><br/> \n";
+    echo " AND <b>Thickness Range</b>: <input type='text' name='thicknessMean_lo' value='0'/> to <input type='text' name='thicknessMean_hi'  value='1000'/> μm <br/><br/> \n";
+    echo " AND <b>Thickness Standard Deviation Range</b>: <input type='text' name='thicknessStdDev_lo' value='0'/> to <input type='text' name='thicknessStdDev_hi' value='1000'/> μm <br/><br/> \n";
     echo " <input type='submit' value='Search'> \n";
     echo "</form> \n";
     echo "</p> \n";
@@ -40,9 +52,25 @@
   {
     if ($_POST["searchstring"] != "" || $_SESSION["searchstring"] != "")
     {
-      $searchstring = "%";
-      if ($_SESSION["searchstring"] != "") {$searchstring = $_SESSION["searchstring"]; unset($_SESSION["searchstring"]);}
-      else $searchstring = $_POST["searchstring"];
+      if ($_SESSION["searchstring"] != "")
+      {
+        $searchstring = $_SESSION["searchstring"];             unset($_SESSION["searchstring"]);
+        $searchLocation = $_SESSION["location"];               unset($_SESSION["location"]);
+        $thicknessMean_lo = $_SESSION["thicknessMean_lo"];     unset($_SESSION["thicknessMean_lo"]);
+        $thicknessMean_hi = $_SESSION["thicknessMean_hi"];     unset($_SESSION["thicknessMean_hi"]);
+        $thicknessStdDev_lo = $_SESSION["thicknessStdDev_lo"]; unset($_SESSION["thicknessStdDev_lo"]);
+        $thicknessStdDev_hi = $_SESSION["thicknessStdDev_hi"]; unset($_SESSION["thicknessStdDev_hi"]);
+      }
+      else
+      {
+        $searchstring = $_POST["searchstring"];
+        $searchLocation = $_POST["location"];
+        $thicknessMean_lo = $_POST["thicknessMean_lo"];
+        $thicknessMean_hi = $_POST["thicknessMean_hi"];
+        $thicknessStdDev_lo = $_POST["thicknessStdDev_lo"];
+        $thicknessStdDev_hi = $_POST["thicknessStdDev_hi"];
+      }
+      if ($searchLocation == "Any") $searchLocation = "%";
 
       echo "<br/> \n";
       echo "<p> \n";
@@ -61,7 +89,12 @@
 
       include("dbconnect.php");
       $connection = openConnection();
-      $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."'";
+      $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."' AND
+                                              location LIKE '".$searchLocation."' AND
+                                              thickness_mean > '".$thicknessMean_lo."' AND
+                                              thickness_mean < '".$thicknessMean_hi."' AND
+                                              thickness_stddev > '".$thicknessStdDev_lo."' AND
+                                              thickness_stddev < '".$thicknessStdDev_hi."'";
       $queryResult = mysqli_query($connection, $sqlQuery);
 
       while ($map_output = mysqli_fetch_assoc($queryResult))
@@ -108,6 +141,11 @@
         echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
         echo "  </select> \n";
         echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
+        echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
+        echo "  <input type='hidden' name='thicknessMean_lo' value='".$thicknessMean_lo."'/>";
+        echo "  <input type='hidden' name='thicknessMean_hi' value='".$thicknessMean_hi."'/>";
+        echo "  <input type='hidden' name='thicknessStdDev_lo' value='".$thicknessStdDev_lo."'/>";
+        echo "  <input type='hidden' name='thicknessStdDev_hi' value='".$thicknessStdDev_hi."'/>";
         echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
         echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
         echo "</form> \n";
