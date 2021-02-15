@@ -141,29 +141,32 @@
       echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
       echo " <td> ".$thickness." </td> \n";
 
-      // The location can be changed and needs a dropdown menu if it is to be edited
       echo " <td > \n";
       echo $location." \n";
-      echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
-      echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
-      echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
-      echo "   <option value='Purdue University'>Purdue University</option> \n";
-      echo "   <option value='Fermilab'>Fermilab</option> \n";
-      echo "   <option value='CERN'>CERN</option> \n";
-      echo "   <option value='ACP Composites'>ACP Composites</option> \n";
-      echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
-      echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
-      echo "  </select> \n";
-      echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
-      echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
-      echo "  <input type='hidden' name='thicknessMean_lo' value='".$thicknessMean_lo."'/>";
-      echo "  <input type='hidden' name='thicknessMean_hi' value='".$thicknessMean_hi."'/>";
-      echo "  <input type='hidden' name='thicknessStdDev_lo' value='".$thicknessStdDev_lo."'/>";
-      echo "  <input type='hidden' name='thicknessStdDev_hi' value='".$thicknessStdDev_hi."'/>";
-      echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
-      echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
-      echo "</form> \n";
-      echo "<button type='button' id='cancel_".$sheetstring."' style='display:none' onclick=hideMovingElements('".$sheetstring."')>Cancel</button> \n";
+      // The location can be changed if the privilege is Editor
+      if ($_SESSION["privilege"] == "Editor")
+      {
+        echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
+        echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
+        echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
+        echo "   <option value='Purdue University'>Purdue University</option> \n";
+        echo "   <option value='Fermilab'>Fermilab</option> \n";
+        echo "   <option value='CERN'>CERN</option> \n";
+        echo "   <option value='ACP Composites'>ACP Composites</option> \n";
+        echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
+        echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
+        echo "  </select> \n";
+        echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
+        echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
+        echo "  <input type='hidden' name='thicknessMean_lo' value='".$thicknessMean_lo."'/>";
+        echo "  <input type='hidden' name='thicknessMean_hi' value='".$thicknessMean_hi."'/>";
+        echo "  <input type='hidden' name='thicknessStdDev_lo' value='".$thicknessStdDev_lo."'/>";
+        echo "  <input type='hidden' name='thicknessStdDev_hi' value='".$thicknessStdDev_hi."'/>";
+        echo "  <input type='hidden' name='sheetstring' value='".$sheetstring."'/>";
+        echo "  <input id='submit_".$sheetstring."' style='display:none' type='submit' value='Submit'/> \n";
+        echo "</form> \n";
+        echo "<button type='button' id='cancel_".$sheetstring."' style='display:none' onclick=hideMovingElements('".$sheetstring."')>Cancel</button> \n";
+      }
       echo " </td> \n";
 
       echo " <td> ".$moverInformation." </td> \n";
