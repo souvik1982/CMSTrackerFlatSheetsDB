@@ -101,10 +101,10 @@
     $connection = openConnection();
     $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."' AND
                                             location LIKE '".$searchLocation."' AND
-                                            thickness_mean > '".$thicknessMean_lo."' AND
-                                            thickness_mean < '".$thicknessMean_hi."' AND
-                                            thickness_stddev > '".$thicknessStdDev_lo."' AND
-                                            thickness_stddev < '".$thicknessStdDev_hi."'";
+                                            thickness_mean >= '".$thicknessMean_lo."' AND
+                                            thickness_mean <= '".$thicknessMean_hi."' AND
+                                            thickness_stddev >= '".$thicknessStdDev_lo."' AND
+                                            thickness_stddev <= '".$thicknessStdDev_hi."'";
     $queryResult = mysqli_query($connection, $sqlQuery);
 
     $itemNumber = 0;
