@@ -116,7 +116,7 @@
       $sheetstring = $map_output["sheetstring"];
       $file = $map_output["folder"].$sheetstring;
       $thickness_mean = $map_output["thickness_mean"];
-      $thickness_stddev = $map_output["thickness_stddev"]
+      $thickness_stddev = $map_output["thickness_stddev"];
       $location = $map_output["location"];
       $movingTime = $map_output["movingTime"];
 
