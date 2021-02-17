@@ -91,11 +91,11 @@
     echo "  <th> Datasheets Entered by </th> \n";
     echo "  <th> PDF Datasheet </th> \n";
     echo "  <th> CSV Datasheet </th> \n";
-    echo "  <th> Thickness Mean (μm) </th> \n";
-    echo "  <th> Thickness Std Dev (μm) </th> \n";
+    echo "  <th> Thickness Mean <br/> (μm) </th> \n";
+    echo "  <th> Thickness Std Dev <br/> (μm) </th> \n";
     echo "  <th> Location </th> \n";
-    echo "  <th> Location Modified by </th> \n";
-    echo "  <th> Location Modified on </th> \n";
+    echo "  <th> Location <br/> Modified by </th> \n";
+    echo "  <th> Location <br/> Modified on </th> \n";
     echo " </tr> \n";
 
     include("dbconnect.php");
