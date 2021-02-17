@@ -39,7 +39,7 @@
     echo "  <option value='INFN Perugia'>INFN Perugia</option> \n";
     echo "  <option value='INFN Pisa'>INFN Pisa</option> \n";
     echo " </select> <br/><br/> \n";
-    echo " AND <b>Thickness Range</b>: <input type='text' name='thicknessMean_lo' value='0'/> to <input type='text' name='thicknessMean_hi'  value='1000'/> μm <br/><br/> \n";
+    echo " AND <b>Thickness Mean Range</b>: <input type='text' name='thicknessMean_lo' value='0'/> to <input type='text' name='thicknessMean_hi'  value='1000'/> μm <br/><br/> \n";
     echo " AND <b>Thickness Standard Deviation Range</b>: <input type='text' name='thicknessStdDev_lo' value='0'/> to <input type='text' name='thicknessStdDev_hi' value='1000'/> μm <br/><br/> \n";
     echo " <input type='submit' value='Search'> \n";
     echo "</form> \n";
@@ -91,7 +91,8 @@
     echo "  <th> Datasheets Entered by </th> \n";
     echo "  <th> PDF Datasheet </th> \n";
     echo "  <th> CSV Datasheet </th> \n";
-    echo "  <th> Thickness (μm) </th> \n";
+    echo "  <th> Thickness Mean (μm) </th> \n";
+    echo "  <th> Thickness Std Dev (μm) </th> \n";
     echo "  <th> Location </th> \n";
     echo "  <th> Location Modified by </th> \n";
     echo "  <th> Location Modified on </th> \n";
@@ -114,7 +115,8 @@
 
       $sheetstring = $map_output["sheetstring"];
       $file = $map_output["folder"].$sheetstring;
-      $thickness = $map_output["thickness_mean"]." ± ".$map_output["thickness_stddev"];
+      $thickness_mean = $map_output["thickness_mean"];
+      $thickness_stddev = $map_output["thickness_stddev"]
       $location = $map_output["location"];
       $movingTime = $map_output["movingTime"];
 
@@ -139,7 +141,8 @@
       echo " <td> ".$userInformation." </td> \n";
       echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
       echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
-      echo " <td> ".$thickness." </td> \n";
+      echo " <td> ".$thickness_mean." </td> \n";
+      echo " <td> ".$thickness_stddev." </td> \n";
 
       echo " <td > \n";
       echo $location." \n";
