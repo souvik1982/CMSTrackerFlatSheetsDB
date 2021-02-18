@@ -32,12 +32,13 @@
     echo " AND <b>Current Location</b>: \n";
     echo " <select name='location'> \n";
     echo "  <option value='Any'>Any</option> \n";
-    echo "  <option value='Purdue University'>Purdue University</option> \n";
-    echo "  <option value='Fermilab'>Fermilab</option> \n";
-    echo "  <option value='CERN'>CERN</option> \n";
-    echo "  <option value='ACP Composites'>ACP Composites</option> \n";
-    echo "  <option value='INFN Perugia'>INFN Perugia</option> \n";
-    echo "  <option value='INFN Pisa'>INFN Pisa</option> \n";
+    include("dbconnect.php");
+    $connection = openConnection();
+    $sqlQuery = "SELECT affiliation FROM affiliations";
+    $queryResult = mysqli_query($connection, $sqlQuery);
+    while ($map_output = mysqli_fetch_assoc($queryResult))
+      echo "  <option value='".$map_output["affiliation"]."'>".$map_output["affiliation"]."</option> \n";
+    mysqli_close($connection);
     echo " </select> <br/><br/> \n";
     echo " AND <b>Thickness Mean Range</b>: <input type='text' name='thicknessMean_lo' value='0'/> to <input type='text' name='thicknessMean_hi'  value='1000'/> μm <br/><br/> \n";
     echo " AND <b>Thickness Standard Deviation Range</b>: <input type='text' name='thicknessStdDev_lo' value='0'/> to <input type='text' name='thicknessStdDev_hi' value='1000'/> μm <br/><br/> \n";
@@ -98,7 +99,6 @@
     echo "  <th> Location Modified on </th> \n";
     echo " </tr> \n";
 
-    include("dbconnect.php");
     $connection = openConnection();
     $sqlQuery = "SELECT * FROM sheets WHERE sheetstring LIKE '".$searchstring."' AND
                                             location LIKE '".$searchLocation."' AND
@@ -152,12 +152,11 @@
         echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
         echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";
         echo "  <select id='dropDown_".$sheetstring."' style='display:none' name='newLocation'> \n";
-        echo "   <option value='Purdue University'>Purdue University</option> \n";
-        echo "   <option value='Fermilab'>Fermilab</option> \n";
-        echo "   <option value='CERN'>CERN</option> \n";
-        echo "   <option value='ACP Composites'>ACP Composites</option> \n";
-        echo "   <option value='INFN Perugia'>INFN Perugia</option> \n";
-        echo "   <option value='INFN Pisa'>INFN Pisa</option> \n";
+        echo "  <option value = 'Purdue'>Purdue</option";
+        $sqlQuery_affiliations = "SELECT affiliation FROM affiliations";
+        $queryResult_affiliations = mysqli_query($connection, $sqlQuery_affiliations);
+        while ($map_affiliations = mysqli_fetch_assoc($queryResult_affiliations))
+          echo "  <option value='".$map_affiliations["affiliation"]."'>".$map_affiliations["affiliation"]."</option> \n";
         echo "  </select> \n";
         echo "  <input type='hidden' name='searchstring' value='".$searchstring."'/>";
         echo "  <input type='hidden' name='searchLocation' value='".$searchLocation."'/>";
@@ -177,7 +176,10 @@
       echo "</tr> \n";
     }
 
+    mysqli_close($connection);
+
     echo "</table> \n";
+
   }
 
 ?>

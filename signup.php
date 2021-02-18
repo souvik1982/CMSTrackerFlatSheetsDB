@@ -19,12 +19,15 @@
     </select><br/><br/>
   <b>Affiliation</b><br/>
     <select name="affiliation">
-      <option value="Purdue University">Purdue University</option>
-      <option value="Fermilab">Fermilab</option>
-      <option value="CERN">CERN</option>
-      <option value="ACP Composites">ACP Composites</option>
-      <option value="INFN Perugia">INFN Perugia</option>
-      <option value="INFN Pisa">INFN Pisa</option>
+      <?php
+        include("dbconnect.php");
+        $connection = openConnection();
+        $sqlQuery = "SELECT affiliation FROM affiliations";
+        $queryResult = mysqli_query($connection, $sqlQuery);
+        while ($map_output = mysqli_fetch_assoc($queryResult))
+          echo "      <option value='".$map_output["affiliation"]."'>".$map_output["affiliation"]."</option> \n";
+        mysqli_close($connection);
+      ?>
     </select><br/><br/>
   <b>Email</b><br/>             <input type="text" name="email"> <br/><br/>
   <b>Username</b><br/>          <input type="text" name="username"> <br/><br/>
@@ -67,7 +70,6 @@ Already have an account? <a href="index.php"> Login here.</a>
 
     if ($allOkay)
     {
-      include("dbconnect.php");
       $connection = openConnection();
       $sqlQuery = "SELECT username FROM users WHERE username='".$username."'";
       $output = mysqli_query($connection, $sqlQuery);

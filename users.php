@@ -39,6 +39,7 @@
       echo " <td> ".$map_output["email"]." </td> \n";
       echo "</tr> \n";
     }
+    mysqli_close($connection);
 
     echo "</table> \n";
   }
