@@ -119,11 +119,12 @@
       $thickness_stddev = $map_output["thickness_stddev"];
       $location = $map_output["location"];
       $movingTime = $map_output["movingTime"];
+      $created_at = $map_output["created_at"];
 
       $userId = $map_output["userId"];
       $sqlQuery_user = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$userId;
       $map_output_user = mysqli_fetch_assoc(mysqli_query($connection, $sqlQuery_user));
-      $userInformation = $map_output_user["firstname"]." ".$map_output_user["lastname"].", ".$map_output_user["affiliation"];
+      $userInformation = $map_output_user["firstname"]." ".$map_output_user["lastname"].", ".$map_output_user["affiliation"].", at ".$created_at;
 
       $moverId = $map_output["moverId"];
       $sqlQuery_mover = "SELECT firstname, lastname, affiliation FROM users WHERE id=".$moverId;
