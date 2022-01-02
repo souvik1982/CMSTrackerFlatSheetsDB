@@ -138,7 +138,14 @@
 
       echo "<tr> \n";
       echo " <td> ".$itemNumber." </td> \n";
-      echo " <td> ".$sheetstring." </td> \n";
+      echo " <td> \n";
+      echo $sheetstring." \n";
+      // The sheet can be deleted if the privilege is Administrator
+      if ($_SESSION["privilege"] == "Administrator")
+      {
+        echo "<button type='button' id='delete_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Delete</button> \n";
+      }
+      echo " </td> \n";
       echo " <td> ".$userInformation." </td> \n";
       echo " <td> <a href='".$file.".pdf' target='_blank'>".$sheetstring.".PDF</a> </td> \n";
       echo " <td> <a href='".$file.".csv' target='_blank'>".$sheetstring.".CSV</a> </td> \n";
@@ -147,8 +154,8 @@
 
       echo " <td > \n";
       echo $location." \n";
-      // The location can be changed if the privilege is Editor
-      if ($_SESSION["privilege"] == "Editor")
+      // The location can be changed if the privilege is Editor or Administrator
+      if ($_SESSION["privilege"] == "Editor" || $_SESSION["privilege"] == "Administrator")
       {
         echo "<button type='button' id='edit_".$sheetstring."' onclick=showMovingElements('".$sheetstring."')>Change Location</button> \n";
         echo "<form action='move.php' method='post' enctype='multipart/form-data'> \n";

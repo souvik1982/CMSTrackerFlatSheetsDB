@@ -17,7 +17,7 @@
 
     echo "<br/> \n";
     echo "<p> \n";
-    if ($_SESSION["privilege"] == "Editor")
+    if ($_SESSION["privilege"] == "Editor" || $_SESSION["privilege"] == "Administrator")
     {
       echo " This form allows you to upload datasheets of multiple flat sheets. <br/> \n";
       echo " Please ensure there is a CSV file corresponding to every PDF file. <br/> \n";
